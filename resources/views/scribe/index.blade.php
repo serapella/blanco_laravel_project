@@ -75,16 +75,16 @@
                                 <a href="#endpoints-GETapi-user">GET api/user</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-invoices">
-                                <a href="#endpoints-GETapi-invoices">GET api/invoices</a>
+                                <a href="#endpoints-GETapi-invoices">Get all invoices</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-invoices">
-                                <a href="#endpoints-POSTapi-invoices">POST api/invoices</a>
+                                <a href="#endpoints-POSTapi-invoices">Create a new invoice</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-invoices--id-">
-                                <a href="#endpoints-GETapi-invoices--id-">GET api/invoices/{id}</a>
+                                <a href="#endpoints-GETapi-invoices--id-">Get a specific invoice</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-invoices--id-">
-                                <a href="#endpoints-DELETEapi-invoices--id-">DELETE api/invoices/{id}</a>
+                                <a href="#endpoints-DELETEapi-invoices--id-">Delete an invoice</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -97,7 +97,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: May 5, 2025</li>
+        <li>Last updated: May 8, 2025</li>
     </ul>
 </div>
 
@@ -244,7 +244,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="endpoints-GETapi-invoices">GET api/invoices</h2>
+                    <h2 id="endpoints-GETapi-invoices">Get all invoices</h2>
 
 <p>
 </p>
@@ -257,7 +257,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://laravel.ddev.site/api/invoices" \
+    --get "https://laravel.ddev.site/api/invoices?status=paid&amp;due_date_from=2024-05-01&amp;due_date_to=2024-05-31" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -266,6 +266,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <pre><code class="language-javascript">const url = new URL(
     "https://laravel.ddev.site/api/invoices"
 );
+
+const params = {
+    "status": "paid",
+    "due_date_from": "2024-05-01",
+    "due_date_to": "2024-05-31",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
     "Content-Type": "application/json",
@@ -281,18 +289,25 @@ fetch(url, {
 
 <span id="example-responses-GETapi-invoices">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (200, success):</p>
         </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-access-control-allow-origin: *
- </code></pre></details>         <pre>
+                <pre>
 
-<code class="language-json" style="max-height: 300px;">[]</code>
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;invoice_number&quot;: &quot;INV-001&quot;,
+            &quot;customer_name&quot;: &quot;John Doe&quot;,
+            &quot;title&quot;: &quot;Monthly Service&quot;,
+            &quot;description&quot;: &quot;Monthly maintenance service&quot;,
+            &quot;status&quot;: &quot;paid&quot;,
+            &quot;due_date&quot;: &quot;2024-05-15T00:00:00&quot;,
+            &quot;created_at&quot;: &quot;2024-05-05T12:00:00&quot;,
+            &quot;updated_at&quot;: &quot;2024-05-05T12:00:00&quot;
+        }
+    ]
+}</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-invoices" hidden>
@@ -364,9 +379,43 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-invoices"
+               value="paid"
+               data-component="query">
+    <br>
+<p>Filter invoices by status. Must be one of: draft, sent, paid, overdue, cancelled. Example: <code>paid</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>due_date_from</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="due_date_from"                data-endpoint="GETapi-invoices"
+               value="2024-05-01"
+               data-component="query">
+    <br>
+<p>Filter invoices with due date after this date. Example: <code>2024-05-01</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>due_date_to</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="due_date_to"                data-endpoint="GETapi-invoices"
+               value="2024-05-31"
+               data-component="query">
+    <br>
+<p>Filter invoices with due date before this date. Example: <code>2024-05-31</code></p>
+            </div>
+                </form>
 
-                    <h2 id="endpoints-POSTapi-invoices">POST api/invoices</h2>
+                    <h2 id="endpoints-POSTapi-invoices">Create a new invoice</h2>
 
 <p>
 </p>
@@ -383,12 +432,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"invoice_number\": \"architecto\",
-    \"customer_name\": \"architecto\",
-    \"title\": \"n\",
-    \"description\": \"Eius et animi quos velit et.\",
-    \"status\": \"pending\",
-    \"due_date\": \"2025-05-05T19:41:00\"
+    \"invoice_number\": \"INV-001\",
+    \"customer_name\": \"John Doe\",
+    \"title\": \"Monthly Service\",
+    \"description\": \"Monthly maintenance service\",
+    \"status\": \"paid\",
+    \"due_date\": \"2024-05-15T00:00:00\"
 }"
 </code></pre></div>
 
@@ -404,12 +453,12 @@ const headers = {
 };
 
 let body = {
-    "invoice_number": "architecto",
-    "customer_name": "architecto",
-    "title": "n",
-    "description": "Eius et animi quos velit et.",
-    "status": "pending",
-    "due_date": "2025-05-05T19:41:00"
+    "invoice_number": "INV-001",
+    "customer_name": "John Doe",
+    "title": "Monthly Service",
+    "description": "Monthly maintenance service",
+    "status": "paid",
+    "due_date": "2024-05-15T00:00:00"
 };
 
 fetch(url, {
@@ -421,7 +470,47 @@ fetch(url, {
 </span>
 
 <span id="example-responses-POSTapi-invoices">
-</span>
+            <blockquote>
+            <p>Example response (201, success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;id&quot;: 1,
+    &quot;invoice_number&quot;: &quot;INV-001&quot;,
+    &quot;customer_name&quot;: &quot;John Doe&quot;,
+    &quot;title&quot;: &quot;Monthly Service&quot;,
+    &quot;description&quot;: &quot;Monthly maintenance service&quot;,
+    &quot;status&quot;: &quot;paid&quot;,
+    &quot;due_date&quot;: &quot;2024-05-15T00:00:00&quot;,
+    &quot;created_at&quot;: &quot;2024-05-05T12:00:00&quot;,
+    &quot;updated_at&quot;: &quot;2024-05-05T12:00:00&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, validation error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The given data was invalid.&quot;,
+    &quot;errors&quot;: {
+        &quot;invoice_number&quot;: [
+            &quot;The invoice number field is required.&quot;
+        ],
+        &quot;customer_name&quot;: [
+            &quot;The customer name field is required.&quot;
+        ],
+        &quot;title&quot;: [
+            &quot;The title field is required.&quot;
+        ],
+        &quot;status&quot;: [
+            &quot;The status field is required.&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
 <span id="execution-results-POSTapi-invoices" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-POSTapi-invoices"></span>:
@@ -498,10 +587,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="invoice_number"                data-endpoint="POSTapi-invoices"
-               value="architecto"
+               value="INV-001"
                data-component="body">
     <br>
-<p>Example: <code>architecto</code></p>
+<p>The invoice number. Example: <code>INV-001</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>customer_name</code></b>&nbsp;&nbsp;
@@ -509,10 +598,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="customer_name"                data-endpoint="POSTapi-invoices"
-               value="architecto"
+               value="John Doe"
                data-component="body">
     <br>
-<p>Example: <code>architecto</code></p>
+<p>The customer's name. Example: <code>John Doe</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>title</code></b>&nbsp;&nbsp;
@@ -520,10 +609,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="title"                data-endpoint="POSTapi-invoices"
-               value="n"
+               value="Monthly Service"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>n</code></p>
+<p>The invoice title. Example: <code>Monthly Service</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -531,10 +620,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="POSTapi-invoices"
-               value="Eius et animi quos velit et."
+               value="Monthly maintenance service"
                data-component="body">
     <br>
-<p>Example: <code>Eius et animi quos velit et.</code></p>
+<p>The invoice description. Example: <code>Monthly maintenance service</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
@@ -542,12 +631,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-invoices"
-               value="pending"
+               value="paid"
                data-component="body">
     <br>
-<p>Example: <code>pending</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>pending</code></li> <li><code>in_progress</code></li> <li><code>completed</code></li></ul>
+<p>The invoice status. Must be one of: draft, sent, paid, overdue, cancelled. Example: <code>paid</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>due_date</code></b>&nbsp;&nbsp;
@@ -555,14 +642,14 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="due_date"                data-endpoint="POSTapi-invoices"
-               value="2025-05-05T19:41:00"
+               value="2024-05-15T00:00:00"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-05-05T19:41:00</code></p>
+<p>The due date of the invoice. Example: <code>2024-05-15T00:00:00</code></p>
         </div>
         </form>
 
-                    <h2 id="endpoints-GETapi-invoices--id-">GET api/invoices/{id}</h2>
+                    <h2 id="endpoints-GETapi-invoices--id-">Get a specific invoice</h2>
 
 <p>
 </p>
@@ -575,14 +662,14 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://laravel.ddev.site/api/invoices/16" \
+    --get "https://laravel.ddev.site/api/invoices/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://laravel.ddev.site/api/invoices/16"
+    "https://laravel.ddev.site/api/invoices/1"
 );
 
 const headers = {
@@ -599,19 +686,29 @@ fetch(url, {
 
 <span id="example-responses-GETapi-invoices--id-">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (200, success):</p>
         </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-access-control-allow-origin: *
- </code></pre></details>         <pre>
+                <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\Invoice] 16&quot;
+    &quot;id&quot;: 1,
+    &quot;invoice_number&quot;: &quot;INV-001&quot;,
+    &quot;customer_name&quot;: &quot;John Doe&quot;,
+    &quot;title&quot;: &quot;Monthly Service&quot;,
+    &quot;description&quot;: &quot;Monthly maintenance service&quot;,
+    &quot;status&quot;: &quot;paid&quot;,
+    &quot;due_date&quot;: &quot;2024-05-15T00:00:00&quot;,
+    &quot;created_at&quot;: &quot;2024-05-05T12:00:00&quot;,
+    &quot;updated_at&quot;: &quot;2024-05-05T12:00:00&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, invoice not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\Invoice] 1&quot;
 }</code>
  </pre>
     </span>
@@ -691,14 +788,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-invoices--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the invoice. Example: <code>16</code></p>
+<p>The ID of the invoice. Example: <code>1</code></p>
             </div>
                     </form>
 
-                    <h2 id="endpoints-DELETEapi-invoices--id-">DELETE api/invoices/{id}</h2>
+                    <h2 id="endpoints-DELETEapi-invoices--id-">Delete an invoice</h2>
 
 <p>
 </p>
@@ -711,14 +808,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "https://laravel.ddev.site/api/invoices/16" \
+    "https://laravel.ddev.site/api/invoices/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://laravel.ddev.site/api/invoices/16"
+    "https://laravel.ddev.site/api/invoices/1"
 );
 
 const headers = {
@@ -734,7 +831,26 @@ fetch(url, {
 </span>
 
 <span id="example-responses-DELETEapi-invoices--id-">
-</span>
+            <blockquote>
+            <p>Example response (200, success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Invoice deleted successfully&quot;,
+    &quot;id&quot;: 1
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, invoice not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\Invoice] 1&quot;
+}</code>
+ </pre>
+    </span>
 <span id="execution-results-DELETEapi-invoices--id-" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-DELETEapi-invoices--id-"></span>:
@@ -811,10 +927,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-invoices--id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the invoice. Example: <code>16</code></p>
+<p>The ID of the invoice. Example: <code>1</code></p>
             </div>
                     </form>
 

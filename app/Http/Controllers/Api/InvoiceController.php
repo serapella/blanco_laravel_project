@@ -11,7 +11,7 @@ class InvoiceController extends Controller
     /**
      * Get all invoices
      * 
-     * @queryParam status Filter invoices by status. Example: pending
+     * @queryParam status Filter invoices by status. Must be one of: draft, sent, paid, overdue, cancelled. Example: paid
      * @queryParam due_date_from Filter invoices with due date after this date. Example: 2024-05-01
      * @queryParam due_date_to Filter invoices with due date before this date. Example: 2024-05-31
      * 
@@ -23,7 +23,7 @@ class InvoiceController extends Controller
      *      "customer_name": "John Doe",
      *      "title": "Monthly Service",
      *      "description": "Monthly maintenance service",
-     *      "status": "pending",
+     *      "status": "paid",
      *      "due_date": "2024-05-15T00:00:00",
      *      "created_at": "2024-05-05T12:00:00",
      *      "updated_at": "2024-05-05T12:00:00"
@@ -61,7 +61,7 @@ class InvoiceController extends Controller
      *  "customer_name": "John Doe",
      *  "title": "Monthly Service",
      *  "description": "Monthly maintenance service",
-     *  "status": "pending",
+     *  "status": "paid",
      *  "due_date": "2024-05-15T00:00:00",
      *  "created_at": "2024-05-05T12:00:00",
      *  "updated_at": "2024-05-05T12:00:00"
@@ -83,7 +83,7 @@ class InvoiceController extends Controller
      * @bodyParam customer_name string required The customer's name. Example: John Doe
      * @bodyParam title string required The invoice title. Example: Monthly Service
      * @bodyParam description string The invoice description. Example: Monthly maintenance service
-     * @bodyParam status string required The invoice status. Example: pending
+     * @bodyParam status string required The invoice status. Must be one of: draft, sent, paid, overdue, cancelled. Example: paid
      * @bodyParam due_date string The due date of the invoice. Example: 2024-05-15T00:00:00
      * 
      * @response status=201 scenario=success {
@@ -92,7 +92,7 @@ class InvoiceController extends Controller
      *  "customer_name": "John Doe",
      *  "title": "Monthly Service",
      *  "description": "Monthly maintenance service",
-     *  "status": "pending",
+     *  "status": "paid",
      *  "due_date": "2024-05-15T00:00:00",
      *  "created_at": "2024-05-05T12:00:00",
      *  "updated_at": "2024-05-05T12:00:00"
@@ -115,7 +115,7 @@ class InvoiceController extends Controller
             'customer_name' => 'required|string',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:pending,in_progress,completed',
+            'status' => 'required|in:draft,sent,paid,overdue,cancelled',
             'due_date' => 'nullable|date',
         ]);
 

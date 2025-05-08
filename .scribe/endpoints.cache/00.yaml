@@ -51,7 +51,7 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Get all invoices'
       description: ''
       authenticated: false
       custom: []
@@ -60,20 +60,65 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
+    queryParameters:
+      status:
+        name: status
+        description: 'Filter invoices by status. Must be one of: draft, sent, paid, overdue, cancelled.'
+        required: false
+        example: paid
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      due_date_from:
+        name: due_date_from
+        description: 'Filter invoices with due date after this date.'
+        required: false
+        example: '2024-05-01'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      due_date_to:
+        name: due_date_to
+        description: 'Filter invoices with due date before this date.'
+        required: false
+        example: '2024-05-31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      status: paid
+      due_date_from: '2024-05-01'
+      due_date_to: '2024-05-31'
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
-        content: '[]'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+           "data": [
+             {
+               "id": 1,
+               "invoice_number": "INV-001",
+               "customer_name": "John Doe",
+               "title": "Monthly Service",
+               "description": "Monthly maintenance service",
+               "status": "paid",
+               "due_date": "2024-05-15T00:00:00",
+               "created_at": "2024-05-05T12:00:00",
+               "updated_at": "2024-05-05T12:00:00"
+             }
+           ]
+          }
+        headers: []
+        description: success
         custom: []
     responseFields: []
     auth: []
@@ -90,7 +135,7 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Create a new invoice'
       description: ''
       authenticated: false
       custom: []
@@ -104,76 +149,105 @@ endpoints:
     bodyParameters:
       invoice_number:
         name: invoice_number
-        description: ''
+        description: 'The invoice number.'
         required: true
-        example: architecto
+        example: INV-001
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       customer_name:
         name: customer_name
-        description: ''
+        description: "The customer's name."
         required: true
-        example: architecto
+        example: 'John Doe'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       title:
         name: title
-        description: 'Must not be greater than 255 characters.'
+        description: 'The invoice title.'
         required: true
-        example: 'n'
+        example: 'Monthly Service'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       description:
         name: description
-        description: ''
+        description: 'The invoice description.'
         required: false
-        example: 'Eius et animi quos velit et.'
+        example: 'Monthly maintenance service'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         custom: []
       status:
         name: status
-        description: ''
+        description: 'The invoice status. Must be one of: draft, sent, paid, overdue, cancelled.'
         required: true
-        example: pending
+        example: paid
         type: string
-        enumValues:
-          - pending
-          - in_progress
-          - completed
-        exampleWasSpecified: false
+        enumValues: []
+        exampleWasSpecified: true
         nullable: false
         custom: []
       due_date:
         name: due_date
-        description: 'Must be a valid date.'
+        description: 'The due date of the invoice.'
         required: false
-        example: '2025-05-05T19:41:00'
+        example: '2024-05-15T00:00:00'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         custom: []
     cleanBodyParameters:
-      invoice_number: architecto
-      customer_name: architecto
-      title: 'n'
-      description: 'Eius et animi quos velit et.'
-      status: pending
-      due_date: '2025-05-05T19:41:00'
+      invoice_number: INV-001
+      customer_name: 'John Doe'
+      title: 'Monthly Service'
+      description: 'Monthly maintenance service'
+      status: paid
+      due_date: '2024-05-15T00:00:00'
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+           "id": 1,
+           "invoice_number": "INV-001",
+           "customer_name": "John Doe",
+           "title": "Monthly Service",
+           "description": "Monthly maintenance service",
+           "status": "paid",
+           "due_date": "2024-05-15T00:00:00",
+           "created_at": "2024-05-05T12:00:00",
+           "updated_at": "2024-05-05T12:00:00"
+          }
+        headers: []
+        description: success
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+           "message": "The given data was invalid.",
+           "errors": {
+             "invoice_number": ["The invoice number field is required."],
+             "customer_name": ["The customer name field is required."],
+             "title": ["The title field is required."],
+             "status": ["The status field is required."]
+           }
+          }
+        headers: []
+        description: 'validation error'
+        custom: []
     responseFields: []
     auth: []
     controller: null
@@ -189,7 +263,7 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Get a specific invoice'
       description: ''
       authenticated: false
       custom: []
@@ -201,14 +275,14 @@ endpoints:
         name: id
         description: 'The ID of the invoice.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 16
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -216,16 +290,30 @@ endpoints:
     fileParameters: []
     responses:
       -
+        status: 200
+        content: |-
+          {
+           "id": 1,
+           "invoice_number": "INV-001",
+           "customer_name": "John Doe",
+           "title": "Monthly Service",
+           "description": "Monthly maintenance service",
+           "status": "paid",
+           "due_date": "2024-05-15T00:00:00",
+           "created_at": "2024-05-05T12:00:00",
+           "updated_at": "2024-05-05T12:00:00"
+          }
+        headers: []
+        description: success
+        custom: []
+      -
         status: 404
         content: |-
           {
-              "message": "No query results for model [App\\Models\\Invoice] 16"
+           "message": "No query results for model [App\\Models\\Invoice] 1"
           }
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        headers: []
+        description: 'invoice not found'
         custom: []
     responseFields: []
     auth: []
@@ -242,7 +330,7 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Delete an invoice'
       description: ''
       authenticated: false
       custom: []
@@ -254,20 +342,39 @@ endpoints:
         name: id
         description: 'The ID of the invoice.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 16
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Invoice deleted successfully",
+           "id": 1
+          }
+        headers: []
+        description: success
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+           "message": "No query results for model [App\\Models\\Invoice] 1"
+          }
+        headers: []
+        description: 'invoice not found'
+        custom: []
     responseFields: []
     auth: []
     controller: null
