@@ -19,7 +19,10 @@ class InvoiceFactory extends Factory
         return [
             "invoice_number" => fake()->ean13(),
             "customer_name" => fake()->name(),
-
+            "title" => fake()->sentence(),
+            "description" => fake()->paragraph(),
+            "status" => fake()->randomElement(['pending', 'in_progress', 'completed']),
+            "due_date" => fake()->dateTimeBetween('now', '+1 year'),
         ];
     }
 }

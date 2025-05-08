@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('invoice_number');
             $table->string('customer_name');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
+            $table->dateTime('due_date')->nullable();
             $table->timestamps();
         });
     }

@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
-    /** @use HasFactory<\Database\Factories\InvoiceFactory> */
     use HasFactory;
-}
+
+    protected $fillable = [
+        'invoice_number',
+        'customer_name',
+        'title',
+        'description',
+        'status',
+        'due_date',
+    ];
+
+    protected $casts = [
+        'due_date' => 'datetime',
+    ];
+} 
