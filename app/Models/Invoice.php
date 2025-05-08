@@ -21,4 +21,9 @@ class Invoice extends Model
     protected $casts = [
         'due_date' => 'datetime',
     ];
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'invoice_tag');
+    }
 } 

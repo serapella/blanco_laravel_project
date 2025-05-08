@@ -48,6 +48,10 @@ class InvoiceResource extends Resource
                     ])
                     ->required(),
                 Forms\Components\DateTimePicker::make('due_date'),
+                Forms\Components\Select::make('tags')
+                    ->multiple()
+                    ->relationship('tags', 'name')
+                    ->preload(),
             ]);
     }
 
@@ -73,6 +77,9 @@ class InvoiceResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('tags.name')
+                    ->label('Tags')
+                    ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : ''),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
@@ -83,6 +90,8 @@ class InvoiceResource extends Resource
                         'overdue' => 'Overdue',
                         'cancelled' => 'Cancelled',
                     ]),
+                Tables\Filters\SelectFilter::make('tags')
+                    ->relationship('tags', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
